@@ -51,22 +51,26 @@ map.on('load', () => {
 let bboxgeojson;        
 let bbox = turf.envelope(collisionjson); //send point geojson to turf, creates an 'envelope' (bounding box) around points
 //put the resulting envelope in a geojson format FeatureCollection
+let bboxscaled = turf.transformScale(bbox, 1.10); //scale bbox up by 10%
 bboxgeojson = {        
     'type': 'FeatureCollection',        
-    'features': [bbox]
+    'features': [bboxscaled]
 };
 
-console.log(bbox)
-console.log(bbox.geometry.coordinates)
-        
-let bboxcoords = (bbox.geometry.coordinates[0][0][0], // min X
-            bbox.geometry.coordinates[0][0][1], // /min Y
-            bbox.geometry.coordinates[0][2][0], //max X
-            bbox.geometry.coordinates[0][2][1]) //max Y
-        
+console.log(bbox) //checking to see that the bbox variable has the expected characteristics
+console.log(bbox.geometry.coordinates) //checking the bbox coordinates in the console
+
+//the coordinates are ordered in this way: min X,min Y, max X, max Y
+let bboxcoords = [bboxscaled.geometry.coordinates[0][0][0],            
+    bboxscaled.geometry.coordinates[0][0][1],
+    bboxscaled.geometry.coordinates[0][2][0], 
+    bboxscaled.geometry.coordinates[0][2][1]]; 
+console.log(bboxcoords)
+
+//creating the hexgrid       
 let hexgeojson = turf.hexGrid(bboxcoords, 0.5, {units: 'kilometers'}); 
-//bboxcoords = .........
-//0.5 is the length of the side of the hexahond
+//bboxcoords specify the bounding box coordinates, i.e. the geographic limits within which to drae hexagons
+//0.5 is the length of the side of the hexagon
 //units are in kilometres which is appropriate to Toronto, the area of study, where metric units are used
 
     //Add datasource using GeoJSON variable
@@ -95,9 +99,8 @@ let hexgeojson = turf.hexGrid(bboxcoords, 0.5, {units: 'kilometers'});
         'id': 'collisionEnvelope',        
         'type': 'fill',        
         'source': 'collis-bbox',        
-        'paint': {
-            'fill-color': 'red',        
-            'fill-opacity': 0.5,        
+        'paint': {       
+            'fill-opacity': 0, //I have no fill/ a completely transparent fill to ensure the visibility of the underlying map        
             'fill-outline-color': 'black'        
         }        
     });
