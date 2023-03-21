@@ -1,5 +1,5 @@
 # lab_4: Exploring GIS using turf.js
-This code creates a web map of Toronto covered in a hexgrid with a colour ramp representing the number of collisions in each hexagon. Its purpose is to visualize where serious motor-vehicle collisions with pedestrians are occuring in Toronto, and differences in the number of collisions across space. The use of a hexgrid allows for a more neutral areal unit than neighbourhoods or census tracts. <br>
+This code creates a web map of Toronto covered in a hexgrid with a colour ramp representing the number of collisions in each hexagon. Its purpose is to visualize where serious motor-vehicle collisions with pedestrians are occuring in Toronto, and differences in the number of collisions across space. The use of a hexgrid allows for an areal unit with a constant size and arbitrary border, making it easier to compare across units and more politically neutral than neighbourhood or census tract divisions. <br>
 
 The map uses Mapbox, Turf.js, and Bootstrap. <br>
 
