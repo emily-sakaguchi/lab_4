@@ -27,6 +27,7 @@ Step 2: VIEW GEOJSON POINT DATA ON MAP
 let collisionjson;
 
 fetch('https://raw.githubusercontent.com/emily-sakaguchi/lab_4/main/ggr472-lab4/data/pedcyc_collision_06-21.geojson')
+
     .then(response => response.json())
     .then(response => {
         console.log(response); //Check response in console
@@ -45,27 +46,29 @@ fetch('https://raw.githubusercontent.com/emily-sakaguchi/lab_4/main/ggr472-lab4/
 //      First create a bounding box around the collision point data then store as a feature collection variable
 //      Access and store the bounding box coordinates as an array variable
 //      Use bounding box coordinates as argument in the turf hexgrid function
-
-
-        let bboxgeojson;
-        let bbox = turf.envelope(collisionjson); //send point geojson to turf, creates an 'envelope' (bounding box) around points
-            //put the resulting envelope in a geojson format FeatureCollection
-        bboxgeojson = {
-            "type": "FeatureCollection",
-            "features": [bbox]
-        };
-        
-        console.log(bbox)
-        console.log(bbox.geometry.coordinates)
-        
-        let bboxcoords = (bbox.geometry.coordinates[0][0][0], // min X
-                bbox.geometry.coordinates[0][0][1], // /min Y
-                bbox.geometry.coordinates[0][2][0], //max X
-                bbox.geometry.coordinates[0][2][1]) //max Y
-        
-            let hexgeojson = turf.hexGrid(bboxcoords, 0.5, {units: 'kilometres'});
-
 map.on('load', () => {
+
+let bboxgeojson;        
+let bbox = turf.envelope(collisionjson); //send point geojson to turf, creates an 'envelope' (bounding box) around points
+//put the resulting envelope in a geojson format FeatureCollection
+bboxgeojson = {        
+    'type': 'FeatureCollection',        
+    'features': [bbox]
+};
+
+console.log(bbox)
+console.log(bbox.geometry.coordinates)
+        
+let bboxcoords = (bbox.geometry.coordinates[0][0][0], // min X
+            bbox.geometry.coordinates[0][0][1], // /min Y
+            bbox.geometry.coordinates[0][2][0], //max X
+            bbox.geometry.coordinates[0][2][1]) //max Y
+        
+let hexgeojson = turf.hexGrid(bboxcoords, 0.5, {units: 'kilometers'}); 
+//bboxcoords = .........
+//0.5 is the length of the side of the hexahond
+//units are in kilometres which is appropriate to Toronto, the area of study, where metric units are used
+
     //Add datasource using GeoJSON variable
     map.addSource('collisions-TO', {
         type: 'geojson', //geojson format is essential for the Turf.js functions used below
@@ -77,44 +80,45 @@ map.on('load', () => {
         'type': 'circle',
         'source': 'collisions-TO', //matches the source given above
         'paint': {
-            'circle-radius': 5,
+            'circle-radius': 4,
             'circle-color': 'red' //red is appropriate to symbolize serious collisions due to its association with danger and warnings
         }
-    }); //adding the bounding box to the map
-            
+    }); 
+    
+    //adding the bounding box to the map
     map.addSource('collis-bbox', {
-        "type": "geojson",
-        "data": bboxgeojson        
+        'type': 'geojson',
+        'data': bboxgeojson        
     });
                     
     map.addLayer({        
-        "id": "collisionEnvelope",        
-        "type": "fill",        
-        "source": "collis-bbox",        
-        "paint": {
-            'fill-color': "red",        
+        'id': 'collisionEnvelope',        
+        'type': 'fill',        
+        'source': 'collis-bbox',        
+        'paint': {
+            'fill-color': 'red',        
             'fill-opacity': 0.5,        
-            'fill-outline-color': "black"        
+            'fill-outline-color': 'black'        
         }        
     });
     
     //adding the hexgrid  to the map
     map.addSource('collis-hex', {
-        "type": "geojson",
-        "data": hexgeojson
+        'type': "geojson",
+        'data': hexgeojson
         });
     
     map.addLayer({
-        "id": "collishexgrid",
-        "type": "fill",
-        "source": "collis-hex",
-        "paint": {
-            'fill-color': "red",
+        'id': 'collishexgrid',
+        'type': 'fill',
+        'source': 'collis-hex',
+        'paint': {
+            'fill-color': 'red',
             'fill-opacity': 0.5,
-            'fill-outline-color': "black"
+            'fill-outline-color': 'black'
         }
     });
-});
+
 
 /*--------------------------------------------------------------------
 Step 4: AGGREGATE COLLISIONS BY HEXGRID
@@ -122,8 +126,20 @@ Step 4: AGGREGATE COLLISIONS BY HEXGRID
 //HINT: Use Turf collect function to collect all '_id' properties from the collision points data for each heaxagon
 //      View the collect output in the console. Where there are no intersecting points in polygons, arrays will be empty
 
+let collishex = turf.collect(hexgeojson, collisionjson, '_id', 'values');
+console.log(collishex)
 
+let maxcollis = 0;
 
+collishex.features.forEach((feature) => {
+    feature.properties.COUNT = feature.properties.values.length
+    if (features.properties.COUNT > maxcollis) {
+        maxcollis = features.properties.COUNT
+    }
+});
+console.log(features)
+
+});
 // /*--------------------------------------------------------------------
 // Step 5: FINALIZE YOUR WEB MAP
 // --------------------------------------------------------------------*/
