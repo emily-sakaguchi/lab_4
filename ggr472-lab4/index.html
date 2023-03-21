@@ -20,10 +20,33 @@
     <!-- MAP CONTAINER -->
     <div id='map' class='map'></div>
 
+    <!-- MAP OVERLAY (FOR INTERACTIVE FEATURES) -->
+    <div class='map-overlay-data'> <!-- this div class creates an overlay/background to place features on top of -->
+        <label>Filter map view</label>
+        <div class="form-check"> <!-- When checked, it makes the legend visible -->
+            <input class="form-check-input" type="checkbox" value="" id="legendcheck"> <!-- By default, legend if hidden (unchecked) -->
+            <label class="form-check-label" for="flexCheckDefault"> 
+                Legend
+            </label> 
+
 <!-- ELEMENTS -->
 <!-- <div class='map-overlay'>
     <button type="button" class="btn btn-primary btn-sm" id="bboxbutton">Bounding box</button>
 </div> -->
+
+<!-- FILTER FEATURES (INTERACTIVE CHECKBOXES) -->
+<div class="form-check"> <!-- Allows users to view or remove the collision point data to see only the aggregated values as collision polygons -->
+    <input class="form-check-input" type="checkbox" value="" id="layercheck" checked> <!-- Collisions are visible by default -->
+    <label class="form-check-label" for="flexCheckChecked">
+        Collision points 
+    </label>
+</div>
+
+</div>
+
+<!-- LEGEND -->
+<div id='legend' class='legend'>
+</div>
 
 
     <script src="script.js"></script>

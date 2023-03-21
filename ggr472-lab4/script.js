@@ -152,3 +152,95 @@ ADDING DATA TO THE MAP COLLISIONS
         }
     });
 })
+/*--------------------------------------------------------------------
+LEGEND
+--------------------------------------------------------------------*/
+//Declare array variables for labels and colours
+var legendlabels = [ //I use var rather than const here to provide myself with flexiblity as the legend changes
+    '0-10',
+    '10-25', 
+    '25-55'
+];
+
+var legendcolours = [ //I use var rather than const here to provide myself with flexiblity as the legend changes
+    '#99e600', // lime green for 'Not an NIA or Emerging Neighbourhood'
+    '#F7d125', // soft red for 'Neighbourhood Improvement Area'
+    '#Ff6700', // neutral yellow for 'Emerging Neighbourhood'
+    'blue' // curb lane/parklet café
+];
+
+//legend variable that corresponds to legend div tag in html
+const legend = document.getElementById('legend');
+
+//Creates a legend block containing colours and labels
+legendlabels.forEach((label, i) => {
+    const color = legendcolours[i];
+
+    const item = document.createElement('div'); //creates the rows
+    const key = document.createElement('span'); //adds a key (circle of colour) to the row
+
+    key.className = 'legend-key'; //style proprties assigned in style.css
+    key.style.backgroundColor = color; //the color is assigned in the layers array
+
+    const value = document.createElement('span'); //adds a value to each row 
+    value.innerHTML = `${label}`; //adds a text label to the value 
+
+    item.appendChild(key); //appends the key to the legend row
+    item.appendChild(value); //appends the value to the legend row
+
+    legend.appendChild(item); //appends each row to the legend
+});
+
+
+/*--------------------------------------------------------------------
+INTERACTIVITY
+- check boxes and buttons
+--------------------------------------------------------------------*/
+
+//Legend display (check box)
+let legendcheck = document.getElementById('legendcheck');
+
+legendcheck.addEventListener('click', () => {
+    if (legendcheck.checked) {
+        legendcheck.checked = true; //when checked (true), the legend block is visible
+        legend.style.display = 'block';
+    }
+    else {
+        legend.style.display = "none"; 
+        legendcheck.checked = false; //when unchecked (false), the legend block is not displayed
+    }
+});
+
+//Collision points layer display (check box)
+document.getElementById('layercheck').addEventListener('change', (e) => {
+    map.setLayoutProperty(
+        'serious-collisions',
+        'visibility',
+        e.target.checked ? 'visible' : 'none'
+    );
+});
+
+/*--------------------------------------------------------------------
+POP-UP ON CLICK EVENT
+- When the cursor moves over the map, it changes from the default hand to a pointer
+- When the cursor clicks on a hexagon, the number of collisions in that hexagon appear in a pop-up
+- All pop-ups  also include a brief amount of text describing how to interpret the hexagons
+--------------------------------------------------------------------*/
+map.on('mouseenter', 'collishexgrid', () => {
+    map.getCanvas().style.cursor = 'pointer'; //Switches cursor to pointer when mouse is over provterr-fill layer
+});
+
+map.on('mouseleave', 'collishexgrid', () => {
+    map.getCanvas().style.cursor = ''; //Switches cursor back when mouse leaves neighbourhood-fill layer
+});
+
+
+map.on('click', 'collishexgrid', (e) => {
+    new mapboxgl.Popup() //Declares a new popup on each click
+        .setLngLat(e.lngLat) //Coordinates of the mouse click to determine the coordinates of the pop-up
+        //Text for the pop-up:
+        .setHTML("<b>Collision count:</b> " + e.features[0].properties.COUNT + "<br>" +// shows neighbourhood name
+            "How to interpret this map: ") //
+        .addTo(map); //Adds the popup to the map
+})
+
