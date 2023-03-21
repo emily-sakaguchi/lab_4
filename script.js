@@ -34,7 +34,7 @@ PREPARING THE GEOJSON POINT DATA
 let collisionjson; //empty variable to store the collision points GeoJSON data
 
 //below I use the fecth method to access the GeoJSON from the online GitHub repository
-fetch('https://raw.githubusercontent.com/emily-sakaguchi/lab_4/main/ggr472-lab4/data/pedcyc_collision_06-21.geojson')
+fetch('https://raw.githubusercontent.com/emily-sakaguchi/lab_4/main/data/pedcyc_collision_06-21.geojson')
 
     .then(response => response.json()) // Converts the response to JSON format  
     .then(response => {
