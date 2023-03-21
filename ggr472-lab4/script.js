@@ -17,6 +17,14 @@ const map = new mapboxgl.Map({
     zoom: 12 // starting zoom level
 });
 
+/*--------------------------------------------------------------------
+ADDING MAPBOX CONTROLS AS ELEMENTS ON MAP
+--------------------------------------------------------------------*/
+//Adds buttons for zoom and rotation to the map.
+map.addControl(new mapboxgl.NavigationControl());
+
+//Adds a button to make the map fullscreen
+map.addControl(new mapboxgl.FullscreenControl());
 
 /*--------------------------------------------------------------------
 Step 2: VIEW GEOJSON POINT DATA ON MAP
@@ -33,12 +41,6 @@ fetch('https://raw.githubusercontent.com/emily-sakaguchi/lab_4/main/ggr472-lab4/
         console.log(response); //Check response in console
         collisionjson = response; // Store geojson as variable using URL from fetch response
     });
-
-   
-        //MY alternate code to change point size on zoom
-            //'circle-radius':['interpolate', ['linear'], ['zoom'], 9, 1, 10.5, 2, 12, 3, 15, 5],
-            // the above code adjusts the size of points according to the zoom level
-
 /*--------------------------------------------------------------------
     Step 3: CREATE BOUNDING BOX AND HEXGRID
 --------------------------------------------------------------------*/
@@ -142,10 +144,11 @@ ADDING DATA TO THE MAP COLLISIONS
             'fill-color': [
                 'step', //the step expression used here visualizes the collision counts for each hexagon
                 ['get', 'COUNT'],
-                '#800026',
-                10, '#bd0026',
-                25, '#e31a1c',
-                55, 'red' //The maximum number of collisions within one hexagon
+                '#BAFEBE',
+                10, '#A1C64B',
+                20, '#FEE300',
+                30, '#FF8700',
+                40, '#E00805' //The maximum number of collisions within one hexagon
             ],
             'fill-opacity': 0.5,
             'fill-outline-color': 'white'
@@ -157,16 +160,19 @@ LEGEND
 --------------------------------------------------------------------*/
 //Declare array variables for labels and colours
 var legendlabels = [ //I use var rather than const here to provide myself with flexiblity as the legend changes
-    '0-10',
-    '10-25', 
-    '25-55'
+    '0-9',
+    '10-19', 
+    '20-29',
+    '30-39',
+    '40-55'
 ];
 
 var legendcolours = [ //I use var rather than const here to provide myself with flexiblity as the legend changes
-    '#99e600', // lime green for 'Not an NIA or Emerging Neighbourhood'
-    '#F7d125', // soft red for 'Neighbourhood Improvement Area'
-    '#Ff6700', // neutral yellow for 'Emerging Neighbourhood'
-    'blue' // curb lane/parklet café
+    '#BAFEBE', // mint green for 0-9
+    '#A1C64B', // sage green for 10-19
+    '#FEE300', // yellow for 20-29
+    '#FF8700', // orange yellow for 30-39
+    '#E00805' // soft red for 40-55
 ];
 
 //legend variable that corresponds to legend div tag in html
