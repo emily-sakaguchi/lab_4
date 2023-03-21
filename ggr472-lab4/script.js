@@ -67,12 +67,36 @@ let bboxcoords = [bboxscaled.geometry.coordinates[0][0][0],
     bboxscaled.geometry.coordinates[0][2][1]]; 
 console.log(bboxcoords)
 
-//creating the hexgrid       
-let hexgeojson = turf.hexGrid(bboxcoords, 0.5, {units: 'kilometers'}); 
-//bboxcoords specify the bounding box coordinates, i.e. the geographic limits within which to drae hexagons
-//0.5 is the length of the side of the hexagon
-//units are in kilometres which is appropriate to Toronto, the area of study, where metric units are used
+//adding the hexgrid  to the map
+    //creating the hexgrid       
+    let hexgeojson = turf.hexGrid(bboxcoords, 0.5, {units: 'kilometers'}); 
+    //bboxcoords specify the bounding box coordinates, i.e. the geographic limits within which to drae hexagons
+    //0.5 is the length of the side of the hexagon
+    //units are in kilometres which is appropriate to Toronto, the area of study, where metric units are used
 
+/*--------------------------------------------------------------------
+Step 4: AGGREGATE COLLISIONS BY HEXGRID
+--------------------------------------------------------------------*/
+//HINT: Use Turf collect function to collect all '_id' properties from the collision points data for each heaxagon
+//      View the collect output in the console. Where there are no intersecting points in polygons, arrays will be empty
+
+
+    let collishex = turf.collect(hexgeojson, collisionjson, '_id', 'values');
+
+let maxcollis = 0;
+
+collishex.features.forEach((feature) => {
+    feature.properties.COUNT = feature.properties.values.length
+    if (feature.properties.COUNT > maxcollis) {
+        console.log(feature);
+        maxcollis = feature.properties.COUNT
+    }
+})
+/*--------------------------------------------------------------------
+ADDING DATA TO THE MAP COLLISIONS
+--------------------------------------------------------------------*/
+//HINT: Use Turf collect function to collect all '_id' properties from the collision points data for each heaxagon
+//      View the collect output in the console. Where there are no intersecting points in polygons, arrays will be empty
     //Add datasource using GeoJSON variable
     map.addSource('collisions-TO', {
         type: 'geojson', //geojson format is essential for the Turf.js functions used below
@@ -84,7 +108,7 @@ let hexgeojson = turf.hexGrid(bboxcoords, 0.5, {units: 'kilometers'});
         'type': 'circle',
         'source': 'collisions-TO', //matches the source given above
         'paint': {
-            'circle-radius': 4,
+            'circle-radius': 2,
             'circle-color': 'red' //red is appropriate to symbolize serious collisions due to its association with danger and warnings
         }
     }); 
@@ -104,8 +128,7 @@ let hexgeojson = turf.hexGrid(bboxcoords, 0.5, {units: 'kilometers'});
             'fill-outline-color': 'black'        
         }        
     });
-    
-    //adding the hexgrid  to the map
+
     map.addSource('collis-hex', {
         'type': "geojson",
         'data': hexgeojson
@@ -116,41 +139,16 @@ let hexgeojson = turf.hexGrid(bboxcoords, 0.5, {units: 'kilometers'});
         'type': 'fill',
         'source': 'collis-hex',
         'paint': {
-            'fill-color': 'red',
+            'fill-color': [
+                'step', //the step expression used here visualizes the collision counts for each hexagon
+                ['get', 'COUNT'],
+                '#800026',
+                10, '#bd0026',
+                25, '#e31a1c',
+                55, 'red' //The maximum number of collisions within one hexagon
+            ],
             'fill-opacity': 0.5,
-            'fill-outline-color': 'black'
+            'fill-outline-color': 'white'
         }
     });
-
-
-/*--------------------------------------------------------------------
-Step 4: AGGREGATE COLLISIONS BY HEXGRID
---------------------------------------------------------------------*/
-//HINT: Use Turf collect function to collect all '_id' properties from the collision points data for each heaxagon
-//      View the collect output in the console. Where there are no intersecting points in polygons, arrays will be empty
-
-let collishex = turf.collect(hexgeojson, collisionjson, '_id', 'values');
-console.log(collishex)
-
-let maxcollis = 0;
-
-collishex.features.forEach((feature) => {
-    feature.properties.COUNT = feature.properties.values.length
-    if (features.properties.COUNT > maxcollis) {
-        maxcollis = features.properties.COUNT
-    }
-});
-console.log(features)
-
-});
-// /*--------------------------------------------------------------------
-// Step 5: FINALIZE YOUR WEB MAP
-// --------------------------------------------------------------------*/
-//HINT: Think about the display of your data and usability of your web map.
-//      Update the addlayer paint properties for your hexgrid using:
-//        - an expression
-//        - The COUNT attribute
-//        - The maximum number of collisions found in a hexagon
-//      Add a legend and additional functionality including pop-up windows
-
-
+})
