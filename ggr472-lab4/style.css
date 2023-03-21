@@ -1,36 +1,38 @@
-.map {
+.map {  /*this is the foundational styling to add the map to the page*/
     position: absolute;
     top: 0;
     bottom: 0;
     left: 0;
     right: 0;
-    width: 100%;
+    width: 100%; /*this makes the map full screen*/
 }
 
+/*OVERLAY BOX STYLING - for underneath the interactive filter checkbox*/
+
 .map-overlay-data {
-    position: relative;
+    position: absolute;
     font: 14px, sans-serif;
-    background: rgba(255, 255, 255, 0.8); /*makes the background white*/
+    background: white; /*makes the background white and opaque to improve readability of the overlay text*/
     width: 260px;
     top: 0;
-    left: 10px;
+    right: 10px;
     margin-top: 10px;
     padding: 10px; /*adds padding so that it does not look cramped*/
     overflow: visible;
 }
-
+/*LEGEND STYLING*/
 .legend {
     position: absolute;
     display: none;
-    background-color: rgba(255, 255, 255, 0.8); /*makes the background white and transparent to match the selection box*/
+    background-color: white; /*makes the background white and opaque to improve readability of the overlay text*/
     border-radius: 3px;
     margin-bottom: 0px;
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1); /* horizontal shadow, vertical shadow, size of shadow, color */
     font-size: 12px;
     font: sans-serif;
     padding: 10px;
-    top: 110px;
-    left: 10px;
+    bottom: 25px; /* I have added extra space at the bottom to leave room for the mapbox and Open Street Map credits */
+    right: 10px;
     padding: 10px;
     z-index: index;
 } 
