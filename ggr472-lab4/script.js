@@ -41,6 +41,7 @@ fetch('https://raw.githubusercontent.com/emily-sakaguchi/lab_4/main/ggr472-lab4/
         console.log(response); //Check response in console
         collisionjson = response; // Store geojson as variable using URL from fetch response
     });
+
 /*--------------------------------------------------------------------
     Step 3: CREATE BOUNDING BOX AND HEXGRID
 --------------------------------------------------------------------*/
@@ -154,7 +155,8 @@ ADDING DATA TO THE MAP COLLISIONS
             'fill-outline-color': 'white'
         }
     });
-})
+});
+
 /*--------------------------------------------------------------------
 LEGEND
 --------------------------------------------------------------------*/
@@ -248,5 +250,8 @@ map.on('click', 'collishexgrid', (e) => {
         .setHTML("<b>Collision count:</b> " + e.features[0].properties.COUNT + "<br>" +// shows neighbourhood name
             "How to interpret this map: ") //
         .addTo(map); //Adds the popup to the map
-})
+});
 
+
+    
+    
