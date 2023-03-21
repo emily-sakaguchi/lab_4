@@ -93,6 +93,7 @@ collishex.features.forEach((feature) => {
         maxcollis = feature.properties.COUNT//if the collision count is higher, this value becomes the new maximum stored in maxcollis
     }
 })
+
 /*--------------------------------------------------------------------
 ADDING DATA TO THE MAP 
 --------------------------------------------------------------------*/
@@ -200,7 +201,7 @@ legendlabels.forEach((label, i) => {
 
 /*--------------------------------------------------------------------
 INTERACTIVITY
-- check boxes and buttons
+- check boxes to toggle the legend and collision points layer
 --------------------------------------------------------------------*/
 
 //Legend display (check box)
@@ -228,7 +229,7 @@ document.getElementById('layercheck').addEventListener('change', (e) => {
 
 /*--------------------------------------------------------------------
 POP-UP ON CLICK EVENT
-- When the cursor moves over the map, it changes from the default hand to a pointer
+- To indicate to users they can click on hexagons, the cursor changes to a pointer when it moves over them
 - When the cursor clicks on a hexagon, the number of collisions in that hexagon appear in a pop-up
 - All pop-ups also include a brief amount of text describing how to interpret the hexagon collision count
 --------------------------------------------------------------------*/
